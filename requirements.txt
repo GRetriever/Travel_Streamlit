@@ -2,4 +2,4 @@ pillow
 openai
 selenium
 requests
-Image
+webdriver
