@@ -2,4 +2,4 @@ pillow
 openai
 selenium
 requests
-webdriver
+webdriver_manager
