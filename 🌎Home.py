@@ -3,11 +3,11 @@ from PIL import Image
 
 st.set_page_config(layout="centered")
 
-image_1 = Image.open('./data/image_1.jpg')
+image_1 = Image.open('./data/image_1.JPG')
 resize_image_1 = image_1.resize((1000,500))
-image_2 = Image.open('./data/image_2.jpg')
+image_2 = Image.open('./data/image_2.JPG')
 resize_image_2 = image_2.resize((1000,500))
-image_3 = Image.open('./data/image_3.jpg')
+image_3 = Image.open('./data/image_3.JPG')
 resize_image_3 = image_3.resize((1000,500))
 
 st.title(' ')
