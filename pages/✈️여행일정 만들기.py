@@ -5,7 +5,6 @@ from PIL import Image
 from io import BytesIO
 import requests
 from bs4 import BeautifulSoup
-from googletrans import Translator
 import json
 
 
@@ -273,11 +272,15 @@ with tab_food:
                 print_streaming_response(response)
 
 # =========================================================================================================
-
+def translator(city):
+    url = f"https://dic.daum.net/search.do?q={city}dic=eng"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text,'html.parser')
+    city = soup.select_one('.cleanword_type .sub_txt').get_text(strip=True)
+    return city
 
 def hotel_crawling(city,sort,adult,child):
-    translator = Translator()
-    city = translator.translate(city,src='ko',dest='en').text
+    city = translator(city)
 
     if sort == '인기순':
         sortField = 'popularityKR'
