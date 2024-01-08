@@ -3,3 +3,4 @@ openai
 selenium
 requests
 webdriver_manager
+seleniumbase
