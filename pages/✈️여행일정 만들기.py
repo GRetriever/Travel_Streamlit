@@ -282,7 +282,9 @@ from selenium.webdriver.support.ui import Select
 
 def hotel_crawling(country,city,adult,kid,sort):
     options = webdriver.ChromeOptions()
-    options.add_argument("headless")
+    options = Options()
+    options.add_argument('--disable-gpu')
+    options.add_argument('--headless')
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=options)
     actions = ActionChains(driver)
     url = 'https://hotels.naver.com/'
