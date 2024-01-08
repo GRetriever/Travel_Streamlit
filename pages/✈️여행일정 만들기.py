@@ -61,46 +61,39 @@ def print_streaming_response(response):
     placeholder.markdown(message)
 
 def information_crawling(country,city):
-    options = webdriver.ChromeOptions()
-    options.add_argument("headless")
+    url = f'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query={country,city}'
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text,'html.parser')
+    items = soup.select('.value-_R4Lp')
+    image_urls = [img['src'] for img in soup.select('.img_list .item img')]
     
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=options)
-    actions = ActionChains(driver)
-    url = 'https://www.naver.com/'
-    
-    driver.get(url)
-    time.sleep(1)
-    
-    driver.find_element('xpath','//*[@id="query"]').send_keys(country,city)
-    driver.find_element('xpath','//*[@id="search-btn"]').click()
-    time.sleep(1)
-    
-    try:
-        recommendation = driver.find_element('xpath','//*[@id="nxTsOv"]/div/div[1]/div[2]/div[1]/div[2]/div[4]/ul/li[1]/div/a/strong/p').text
-        flight = driver.find_element('xpath','//*[@id="nxTsOv"]/div/div[1]/div[2]/div[1]/div[2]/div[4]/ul/li[2]/div/a/strong').text
-        visa = driver.find_element('xpath','//*[@id="nxTsOv"]/div/div[1]/div[2]/div[1]/div[2]/div[4]/ul/li[3]/div/a/strong').text
-        currency =  driver.find_element('xpath','//*[@id="nxTsOv"]/div/div[1]/div[2]/div[1]/div[2]/div[4]/ul/li[4]/div/a/strong').text
-        voltage = driver.find_element('xpath','//*[@id="nxTsOv"]/div/div[1]/div[2]/div[1]/div[2]/div[4]/ul/li[5]/div/a/strong').text
-        
-        image_url_1 = driver.find_element('xpath','//*[@id="nxTsOv"]/div/div[1]/div[2]/div[1]/div[1]/div[1]/div/ul/li[1]/a/div/img').get_attribute('src')
-        image_url_2 = driver.find_element('xpath','//*[@id="nxTsOv"]/div/div[1]/div[2]/div[1]/div[1]/div[1]/div/ul/li[2]/a/div/img').get_attribute('src')
-        response_1 = requests.get(image_url_1)
-        response_2 = requests.get(image_url_2)
-        img_1 = Image.open(BytesIO(response_1.content))
-        img_2 = Image.open(BytesIO(response_2.content))
-        st.image([img_1, img_2], width=330)
-
-        st.write('추천 : ', recommendation)
-        st.write('비행시간 : ', flight)
-        st.write('비자 : ', visa)
-        st.write('환율 : ', currency)
-        st.write('전압 : ', voltage)
-    except:
-        st.write('추천 : N/A')
-        st.write('비행시간 : N/A')
-        st.write('비자 : N/A')
-        st.write('환율 : N/A')
-        st.write('전압 : N/A')
+    columns = st.columns(2)
+    for i,url in enumerate(image_urls):
+        response = requests.get(url)
+        if i % 2 == 0:
+            columns[0].image(Image.open(BytesIO(response.content)),width=330)
+        else:
+            columns[1].image(Image.open(BytesIO(response.content)),width=330)
+        if i == 1:
+            break
+    if not items:
+        st.write('추천 : ', None)
+        st.write('비행시간 : ', None)
+        st.write('비자 : ',  None)
+        st.write('환율 : ', None)
+        st.write('전압 : ', None)
+    for i,item in enumerate(items):
+        text = item.get_text().strip()
+        if i == 0:
+            st.write('추천 : ', text)
+        if i == 1:
+            st.write('비행시간 : ', text)
+        if i == 2:
+            st.write('비자 : ', text)
+        if i == 3:
+            st.write('환율 : ', text )
+        if i == 4:
+            st.write('전압 : ', text)
 
     
 
