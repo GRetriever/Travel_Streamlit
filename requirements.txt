@@ -4,4 +4,4 @@ selenium
 requests
 webdriver_manager
 seleniumbase
-googletrans
+googletrans==4.0.0
